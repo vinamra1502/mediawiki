@@ -1,0 +1,15 @@
+<VirtualHost *:80>
+    ServerAdmin admin@your-domain.com
+    DocumentRoot {{ path }}
+    ServerName {{ domain }}
+
+    <Directory {{ path }}/>
+        Options FollowSymLinks
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
+
+    ErrorLog /var/log/apache2/{{ domain }}
+    CustomLog /var/log/apache2/{{ domain }}-access_log common
+</VirtualHost>

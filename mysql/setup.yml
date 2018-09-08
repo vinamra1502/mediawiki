@@ -1,0 +1,35 @@
+---
+- hosts: test-2
+  sudo: yes
+  vars:
+    wiki_db: wiki
+    wiki_pass: wiki
+    wiki_user: wiki
+  tasks:
+      - name:  Install Database of packages
+        apt: name={{item}} state=present update_cache=yes
+        with_items: 
+             - mysql-server
+             - mysql-client
+             - python-mysqldb
+      - name: Update Default Mysql conf file
+        sudo: yes
+        lineinfile:
+           dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+           regexp: '#bind-address'
+           line: 'bind-address = 0.0.0.0'
+        notify:
+            - restart mysql
+      - name: Create mysql database
+        mysql_db: name= "{{ wiki_db }}"  state=present
+      - name: Create mysql user
+        mysql_user:
+             name: "{{ wiki_user }}"
+             password: "{{ wiki_pass }}"
+             priv: '*.*:ALL,GRANT'
+             state: present
+             host: "%"
+  handlers:
+    - name: restart mysql
+      service: name=mysql state=restarted
+  

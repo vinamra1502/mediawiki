@@ -1,0 +1,7 @@
+---
+
+- include: webserver/setup.yml
+
+- include: mysql/setup.yml
+    
+   

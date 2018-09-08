@@ -1,0 +1,51 @@
+---
+- hosts: test-1
+  sudo: yes
+  vars:
+   version: 1.31.0
+   path: /var/www/html/mediawiki-{{ version }}
+   domain: www.testvinamra.com
+  tasks:
+      - name:  Install list of packages
+        apt: name={{item}} state=present update_cache=yes
+        with_items: 
+             - apache2
+             - apache2-utils
+             - php
+             - php-mysql
+             - libapache2-mod-php
+             - php-xml
+             - php-mbstring
+             - php-apcu
+             - php-intl 
+             - imagemagick 
+             - inkscape 
+             - php-gd 
+             - php-cli 
+             - php-curl 
+             - git
+             - wget
+             - unzip
+             - zip
+      - name: Download Mediawiki Code
+        get_url: 
+          url: https://releases.wikimedia.org/mediawiki/1.31/mediawiki-{{ version }}.tar.gz
+          dest: /tmp/mediawiki.tar.gz
+          mode: 0777
+      - name: Unarchive MediaWiki
+        unarchive:
+         src: /tmp/mediawiki.tar.gz
+         dest: /var/www/html/
+         owner: root
+         group: root
+         remote_src: yes  
+      - name: Setup Apache For mediawiki
+        template: 
+          src:   wiki.conf.j2
+          dest: /etc/apache2/sites-enabled/wiki.conf
+        notify:
+          - restart apache2
+  handlers:
+    - name: restart apache2
+      service: name=apache2 state=restarted
+ 
