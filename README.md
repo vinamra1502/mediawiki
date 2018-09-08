@@ -2,7 +2,7 @@
 Setup 2 aws instances one for webserver and 2nd for mysql.
 Done with Ansible playbook to setup Webserver where apache and application is running.
 In other instance Mysql database is running.
-In hosts file we mention the IP of websever and myssql
+In Ansible hosts file we mention the IP of websever and myssql
 [test-1]
 Web server IP
 [test-2]
@@ -22,3 +22,5 @@ Step:3 Then By help of jenkins We take the git checkout branchname
 Step:4 Put Latest code to S3
 Step:5 Ssh to given Webserver download the latest code
 Step:6 Reload Apache ( Optional for PHP APPlication ).
+
+Here I am using the Terraform to Create the EC2 Instances for webserver and mysql server then Run the desired Ansible playbook.
